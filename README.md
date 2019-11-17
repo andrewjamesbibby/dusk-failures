@@ -1,4 +1,4 @@
-### Dusk Failures
+# Dusk Failures
 
 A simple Laravel Package to enable the emailing of Dusk failure screenshots. This has been built to assist debugging Dusk tests which run on a Continuous Integration service.
 
