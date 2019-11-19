@@ -44,8 +44,6 @@ class DuskFailuresCommand extends Command
      */
     public function __construct()
     {
-        $this->screenshots = $this->extractScreenshots();
-        $this->recipients = $this->extractRecipients();
         parent::__construct();
     }
 
@@ -76,6 +74,9 @@ class DuskFailuresCommand extends Command
      */
     public function handle()
     {
+        $this->screenshots = $this->extractScreenshots();
+        $this->recipients = $this->extractRecipients();
+
         if(!$this->screenshots){
             $this->line('No failure screenshots to send.');
             return;
