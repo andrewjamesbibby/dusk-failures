@@ -1,6 +1,12 @@
 {
     "name": "bibby/dusk-failures",
     "description": "Package to add dusk:failures command to Laravel.",
+    "keywords": [
+        "bibby",
+        "laravel",
+        "dusk",
+        "ci",
+    ],
     "homepage": "https://github.com/andrewjamesbibby/dusk-failures",
     "license": "MIT",
     "authors": [

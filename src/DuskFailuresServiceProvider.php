@@ -13,7 +13,7 @@ class DuskFailuresServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->commands('Bibby\DuskFailures\Console\DuskFailuresCommand');
+        $this->commands('\Bibby\DuskFailures\Console\DuskFailuresCommand');
         $this->loadViewsFrom(__DIR__.'/Views', 'DuskFailures');
 
         $this->publishes([
