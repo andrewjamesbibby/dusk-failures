@@ -5,7 +5,7 @@
         "bibby",
         "laravel",
         "dusk",
-        "ci",
+        "ci"
     ],
     "homepage": "https://github.com/andrewjamesbibby/dusk-failures",
     "license": "MIT",
