@@ -7,6 +7,16 @@ use Illuminate\Support\ServiceProvider;
 class DuskFailuresServiceProvider extends ServiceProvider
 {
     /**
+     * Register bindings in the container.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->mergeConfigFrom(__DIR__.'/Config/dusk-failures.php', 'dusk-failures');
+    }
+
+    /**
      * Perform post-registration booting of services.
      *
      * @return void
