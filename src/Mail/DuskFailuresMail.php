@@ -44,7 +44,7 @@ class DuskFailuresMail extends Mailable
      */
     public function build()
     {
-        return $this->view('vendor.dusk-failures.failures', [
+        return $this->view('dusk-failures::failures', [
             'screenshots' => $this->screenshots,
             'build'       => $this->build
         ]);

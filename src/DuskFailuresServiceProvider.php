@@ -24,7 +24,7 @@ class DuskFailuresServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->commands('\Bibby\DuskFailures\Console\DuskFailuresCommand');
-        $this->loadViewsFrom(__DIR__.'/Views', 'DuskFailures');
+        $this->loadViewsFrom(__DIR__.'/Views', 'dusk-failures');
 
         $this->publishes([
             __DIR__.'/Config/dusk-failures.php' => config_path('dusk-failures.php'),
