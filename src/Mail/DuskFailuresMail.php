@@ -3,6 +3,7 @@
 namespace Bibby\DuskFailures\Mail;
 
 use Illuminate\Queue\SerializesModels;
+use Bibby\DuskFailures\DuskFailures;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use File;
@@ -12,29 +13,22 @@ class DuskFailuresMail extends Mailable
     use Queueable, SerializesModels;
 
     /**
-     * The CI build reference.
-     *
-     * @var string
-     */
-    private $build;
-
-    /**
-     * The screenshots to send.
+     * The options
      *
      * @var array
      */
-    private $screenshots;
+    private $options;
 
     /**
      * DuskFailuresMail constructor.
      *
-     * @param $screenshots
      * @param null $build
+     * @param bool $console
+     * @param bool $zip
      */
-    public function __construct($screenshots, $build = null)
+    public function __construct($build = null, $console = false, $zip = false)
     {
-        $this->screenshots = $screenshots;
-        $this->build = $build;
+        $this->options = [ 'build' => $build, 'console' => $console, 'zip' => $zip ];
     }
 
     /**
@@ -42,11 +36,21 @@ class DuskFailuresMail extends Mailable
      *
      * @return $this
      */
-    public function build()
+    public function build(DuskFailures $failures)
     {
-        return $this->view('dusk-failures::failures', [
-            'screenshots' => $this->screenshots,
-            'build'       => $this->build
+        $view = $this->view('dusk-failures::failures', [
+            'screenshots' => $failures->getScreenshots(),
+            'options'     => $this->options,
         ]);
+
+        if($this->options['zip']){
+            $view->attach($failures->zipScreenshots());
+        }
+
+        if($this->options['console']){
+            $view->attach($failures->zipConsole());
+        }
+
+        return $view;
     }
 }

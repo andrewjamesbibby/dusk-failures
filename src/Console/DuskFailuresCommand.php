@@ -4,8 +4,8 @@ namespace Bibby\DuskFailures\Console;
 
 use Bibby\DuskFailures\Mail\DuskFailuresMail;
 use Illuminate\Support\Facades\Mail;
+use Bibby\DuskFailures\DuskFailures;
 use Illuminate\Console\Command;
-use File;
 
 class DuskFailuresCommand extends Command
 {
@@ -14,57 +14,34 @@ class DuskFailuresCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'dusk:failures {--build=} ';
+    protected $signature = 'dusk:failures 
+                                { --build=  : The build identifier } 
+                                { --console : Include the browser console output } 
+                                { --zip     : Zip and attach screenshots instead of inline }';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Emails the screenshots of failed Dusk tests';
+    protected $description = 'Email screenshots and logs of failed Dusk tests';
 
     /**
-     * The failed dusk screenshots
+     * Failures
      *
-     * @var array
+     * @var \Bibby\DuskFailures\DuskFailures
      */
-    protected $screenshots;
-
-    /**
-     * Screenshot Recipients
-     *
-     * @var array
-     */
-    protected $recipients;
+    protected $failures;
 
     /**
      * Create a new command instance.
      *
-     * @return void
+     * @param \Bibby\DuskFailures\DuskFailures $failures
      */
-    public function __construct()
+    public function __construct(DuskFailures $failures)
     {
+        $this->failures = $failures;
         parent::__construct();
-    }
-
-    /**
-     * Extract Screenshots
-     *
-     * @return array
-     */
-    private function extractScreenshots(): array
-    {
-        return File::allFiles(config('dusk-failures.path'));
-    }
-
-    /**
-     * Extract Recipients
-     *
-     * @return array
-     */
-    private function extractRecipients(): array
-    {
-        return explode(',', config('dusk-failures.recipient'));
     }
 
     /**
@@ -74,32 +51,30 @@ class DuskFailuresCommand extends Command
      */
     public function handle()
     {
-        $this->screenshots = $this->extractScreenshots();
-        $this->recipients = $this->extractRecipients();
-
-        if(!$this->screenshots){
-            $this->line('No failure screenshots to send.');
-            return;
-        }
-
-        if(!$this->recipients){
-            $this->line('No recipients are specified - set the DUSK_FAILURES_RECIPIENT in your environment file.');
-            return;
-        }
-
-        $this->send();
+        $this->failures->sendable() ? $this->send() : $this->printErrors();
     }
 
     /**
-     * Sends the dusk failure screenshots
+     * Print Command Errors
+     */
+    private function printErrors(): void
+    {
+        foreach ($this->failures->getErrors() as $error){
+            $this->line($error);
+        }
+    }
+
+    /**
+     * Sends the Dusk failure email
      */
     private function send()
     {
         try {
-            Mail::to($this->recipients)->send(new DuskFailuresMail($this->screenshots, $this->option('build')));
+            Mail::to($this->failures->getRecipients())->send(
+                new DuskFailuresMail($this->option('build'), $this->option('console'), $this->option('zip'))
+            );
             $this->line('Screenshots will be emailed to: ' . config('dusk-failures.recipient'));
         } catch(\Exception $e) {
-            $this->error('There was a problem sending the screenshots.');
             $this->error($e->getMessage());
         }
     }
