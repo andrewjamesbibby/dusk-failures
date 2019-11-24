@@ -2,18 +2,17 @@
 
 namespace Bibby\DuskFailures\Mail;
 
-use Illuminate\Queue\SerializesModels;
 use Bibby\DuskFailures\DuskFailures;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use File;
+use Illuminate\Queue\SerializesModels;
 
 class DuskFailuresMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
-     * The options
+     * The options.
      *
      * @var array
      */
@@ -28,7 +27,7 @@ class DuskFailuresMail extends Mailable
      */
     public function __construct($build = null, $console = false, $zip = false)
     {
-        $this->options = [ 'build' => $build, 'console' => $console, 'zip' => $zip ];
+        $this->options = ['build' => $build, 'console' => $console, 'zip' => $zip];
     }
 
     /**
@@ -43,11 +42,11 @@ class DuskFailuresMail extends Mailable
             'options'     => $this->options,
         ]);
 
-        if($this->options['zip']){
+        if ($this->options['zip']) {
             $view->attach($failures->zipScreenshots());
         }
 
-        if($this->options['console']){
+        if ($this->options['console']) {
             $view->attach($failures->zipConsole());
         }
 
