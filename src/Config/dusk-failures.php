@@ -22,6 +22,6 @@ return [
      *
      * Specify here the path to the Laravel Dusk console folder.
      */
-    'console_path' => 'tests/Browser/console'
+    'console_path' => 'tests/Browser/console',
 
 ];
