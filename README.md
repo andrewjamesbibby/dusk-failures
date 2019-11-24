@@ -36,17 +36,31 @@ To use simply run:
 php artisan dusk:failures 
 ````
 
-An optional 'build' parameter can be specified. This is useful to indicate in the email which build the failed screenshots belong to:
+## Options
+
+The 'build' option can be specified. This is useful to indicate in the email which build the failed screenshots belong to:
 
 ```
-php artisan dusk:failures --build=Build16344 
+php artisan dusk:failures --build=<insert-build-information>
 ```
 
-Using Travis CI this command can be put in the on_failure block of the travis.yml file:
+The 'zip' option will zip and attach the screenshots instead of displaying them inline in the body of the email. This could be preferable if a large number of screenshots are expected.
+
+```
+php artisan dusk:failures --zip
+```
+
+The 'console' option can be specified which will attach the browser console logs.
+
+```
+php artisan dusk:failures --console.
+```
+
+Using Travis CI this command can be put in the on_failure block of the travis.yml file and used in combination with Travis environment variables:
 
 ````
 after_failure:
-  - php artisan dusk:failures --build=$TRAVIS_BUILD_WEB_URL
+  - php artisan dusk:failures --build=$TRAVIS_BUILD_WEB_URL --zip --console
 ```` 
 
 ## Credits
