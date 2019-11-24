@@ -1,6 +1,6 @@
 {
     "name": "bibby/dusk-failures",
-    "description": "Package to add dusk:failures command to Laravel.",
+    "description": "Package to add dusk:failures command to Laravel. Emails screenshots and console errors of all failed Dusk tests.",
     "keywords": [
         "bibby",
         "laravel",
